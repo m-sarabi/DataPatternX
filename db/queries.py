@@ -1,3 +1,5 @@
+import pandas as pd
+
 class QueryExecutor:
     def __init__(self, db_connection):
         self.db_connection = db_connection
@@ -10,9 +12,12 @@ class QueryExecutor:
 
             with conn.cursor() as cur:
                 cur.execute(query)
+                columns = [col[0] for col in cur.description]
                 result = cur.fetchall()
+
+                df = pd.DataFrame(result, columns=columns)
 
         finally:
             self.db_connection.put_connection(conn)
 
-        return result
+        return df
