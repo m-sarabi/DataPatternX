@@ -5,7 +5,7 @@ class QueryExecutor:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
-    def execute_pattern_query(self, pattern):
+    def execute_pattern_query(self, pattern, fetch_all):
         query_file = pattern
         if not query_file:
             raise ValueError(f"Pattern '{pattern}' not found")
@@ -22,13 +22,17 @@ class QueryExecutor:
 
                 result_df = pd.DataFrame(result, columns=columns)
 
-                cur.execute("SELECT date, open, high, low, close FROM ohlc_data")
-                columns = [col[0] for col in cur.description]
-                all_data = cur.fetchall()
+                if fetch_all:
+                    cur.execute("SELECT date, open, high, low, close FROM ohlc_data")
+                    columns = [col[0] for col in cur.description]
+                    all_data = cur.fetchall()
 
-                all_data_df = pd.DataFrame(all_data, columns=columns)
+                    all_data_df = pd.DataFrame(all_data, columns=columns)
 
         finally:
             self.db_connection.put_connection(conn)
 
-        return result_df, all_data_df
+        if fetch_all:
+            return result_df, all_data_df
+        else:
+            return result_df
