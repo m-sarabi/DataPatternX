@@ -20,9 +20,15 @@ class QueryExecutor:
                 columns = [col[0] for col in cur.description]
                 result = cur.fetchall()
 
-                df = pd.DataFrame(result, columns=columns)
+                result_df = pd.DataFrame(result, columns=columns)
+
+                cur.execute("SELECT date, open, high, low, close FROM ohlc_data")
+                columns = [col[0] for col in cur.description]
+                all_data = cur.fetchall()
+
+                all_data_df = pd.DataFrame(all_data, columns=columns)
 
         finally:
             self.db_connection.put_connection(conn)
 
-        return df
+        return result_df, all_data_df
