@@ -9,7 +9,7 @@ WITH ranked_data AS (
         LAG(close, 1) OVER (ORDER BY date) AS prev_close,
         AVG(ABS(open - close)) OVER (ORDER BY date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS avg_size
     FROM
-        ohlc_data
+        {{TABLE_NAME}}
 )
 SELECT
     date,
