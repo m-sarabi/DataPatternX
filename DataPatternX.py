@@ -1,9 +1,9 @@
 from argparse import RawDescriptionHelpFormatter
-
+import pandas as pd
 import argparse
 from db.connection import DBConnection
 from db.queries import QueryExecutor
-from pattern_query.patterns import get_pattern, list_patterns
+from pattern_query.patterns import list_patterns
 from plotter import plot_chart
 
 
@@ -11,7 +11,6 @@ def main(pattern_names, table, save_path: str = None, plot: bool = False):
     db_connection = DBConnection()
     try:
         query_executor = QueryExecutor(db_connection)
-        # patterns = get_pattern(pattern_names)
 
         if plot:
             results, all_data = query_executor.execute_pattern_query(pattern_names, table, True)
@@ -21,7 +20,8 @@ def main(pattern_names, table, save_path: str = None, plot: bool = False):
 
         if save_path:
             try:
-                results.to_csv(save_path, index=False)
+                combined_df = pd.concat([res.get('df').assign(Pattern=res.get('name')) for res in results])
+                combined_df.to_csv(save_path, index=False)
                 print('Results saved to', save_path)
             except Exception as e:
                 print('Error saving results:', e)
@@ -42,12 +42,12 @@ if __name__ == '__main__':
     # positional argument
     parser.add_argument('pattern_name', nargs='*',
                         help='Name or names of the candlestick patterns to query')
-    parser.add_argument('-t', '--table', required=True, type=str,
-                        help='Name of the table in database. required argument.')
+    parser.add_argument('-t', '--table', type=str,
+                        help='Name of the table in database.')
     parser.add_argument('-l', '--list', action='store_true',
                         help='List all available candlestick patterns')
-    parser.add_argument('-s', '--save', type=str,
-                        help='Path to save the results in a CSV file')
+    parser.add_argument('-s', '--save', type=str, nargs='?', const='result.csv',
+                        help='Path to save the results in a CSV file (default: result.csv)')
     parser.add_argument('-p', '--plot', action='store_true',
                         help='Plot the results')
 
@@ -59,7 +59,8 @@ if __name__ == '__main__':
             print(f'- {pattern}')
 
     elif args.pattern_name:
-        print(args.pattern_name)
+        if not args.table:
+            parser.error('Table name is required when using pattern names')
         main(args.pattern_name, args.table, save_path=args.save, plot=args.plot)
 
     else:
