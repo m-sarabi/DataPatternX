@@ -12,7 +12,7 @@ class QueryExecutor:
 
         conn = self.db_connection.get_connection()
         try:
-            with open('pattern_queries/dummy.sql', 'r') as file:
+            with open(pattern, 'r') as file:
                 query = file.read()
 
             with conn.cursor() as cur:
