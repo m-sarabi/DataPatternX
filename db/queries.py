@@ -5,7 +5,7 @@ class QueryExecutor:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
-    def execute_pattern_query(self, pattern, fetch_all):
+    def execute_pattern_query(self, pattern, table, fetch_all):
         query_file = pattern
         if not query_file:
             raise ValueError(f"Pattern '{pattern}' not found")
@@ -13,7 +13,7 @@ class QueryExecutor:
         conn = self.db_connection.get_connection()
         try:
             with open(pattern, 'r') as file:
-                query = file.read()
+                query = file.read().replace('{{TABLE_NAME}}', table)
 
             with conn.cursor() as cur:
                 cur.execute(query)
