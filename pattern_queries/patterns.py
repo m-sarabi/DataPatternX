@@ -1,4 +1,3 @@
-DUMMY = 'pattern_queries/dummy.sql'
 HAMMER = 'pattern_queries/hammer.sql'
 
 ENGULFING_BULLISH = 'pattern_queries/engulfing_bullish.sql'
