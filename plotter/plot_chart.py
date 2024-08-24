@@ -4,6 +4,7 @@ import plotly.offline as po
 
 def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
     data = []
+    data_df['date'] = data_df['date'].apply(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'))
     candle_trace = go.Candlestick(
         x=data_df['date'],
         open=data_df['open'],
