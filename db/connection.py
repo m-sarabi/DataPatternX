@@ -1,5 +1,5 @@
-import os
 from psycopg2 import pool
+
 from config.config import DATABASE_URL
 
 
