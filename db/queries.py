@@ -26,7 +26,8 @@ class QueryExecutor:
 
                     result_df = pd.DataFrame(result, columns=columns)
                     results.append({
-                        pattern: result_df
+                        'name': pattern,
+                        'df': result_df
                     })
 
                 if fetch_all:
