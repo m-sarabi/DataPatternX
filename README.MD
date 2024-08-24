@@ -61,6 +61,8 @@ To list all available candlestick patterns, run the following command:
 python DataPatternX.py -l
 ```
 
+### Query Pattern
+
 To query candlestick patterns, run the following command. Results will be printed in the console.
 
 ```bash
@@ -70,11 +72,15 @@ python DataPatternX.py pattern_name -t table_name
 > [!IMPORTANT]
 > When using pattern names, the table name is required.
 
+### Plot Patterns
+
 To plot the results, run the following command:
 
 ```bash
 python DataPatternX.py pattern_name -t table_name -p
 ```
+
+### Save Results
 
 To save the results to a CSV file, run the following command:
 
