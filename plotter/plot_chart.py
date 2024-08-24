@@ -1,12 +1,8 @@
 import plotly.graph_objects as go
 import plotly.offline as po
-import pandas as pd
 
 
-def get_fig(data_df, patterns=None, candle_opacity=1, line_attr=None, title=''):
-    if line_attr is None:
-        line_attr = dict(color='deepskyblue', width=2)
-    # data_df['date'] = data_df['date'].dt.strftime('%Y/%m/%d %H:%M')
+def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
     data = []
     candle_trace = go.Candlestick(
         x=data_df['date'],
@@ -41,12 +37,6 @@ def fig_plot(fig, filename='PlotFiles/plot.html'):
     po.plot(fig, filename)
 
 
-def plot(data_df, patterns=None, candle_opacity=1, line_attr=None, title=''):
-    fig = get_fig(data_df, patterns, candle_opacity, line_attr, title)
+def plot(data_df, patterns=None, candle_opacity=1, title=''):
+    fig = get_fig(data_df, patterns, candle_opacity, title)
     fig_plot(fig)
-
-
-if __name__ == '__main__':
-    patterns = ['2022-12-20 00:04:00', '2022-12-20 01:35:00']
-    df = pd.read_csv('../example-data/EURUSD_Candlestick_Example.csv')
-    plot(df, patterns=patterns)
