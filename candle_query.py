@@ -14,10 +14,10 @@ def main(pattern_names, table, save_path: str = None, plot: bool = False):
         # patterns = get_pattern(pattern_names)
 
         if plot:
-            results, all_data = query_executor.execute_pattern_query(patterns, table, True)
+            results, all_data = query_executor.execute_pattern_query(pattern_names, table, True)
             plot_chart.plot(all_data, patterns=results)
         else:
-            results = query_executor.execute_pattern_query(pattern, table, False)
+            results = query_executor.execute_pattern_query(pattern_names, table, False)
 
         if save_path:
             try:
@@ -26,7 +26,9 @@ def main(pattern_names, table, save_path: str = None, plot: bool = False):
             except Exception as e:
                 print('Error saving results:', e)
         elif not plot:
-            print(results)
+            for result in results:
+                print(result.get('name'), 'Patterns:')
+                print(result.get('df'))
 
     finally:
         db_connection.close_connection()
