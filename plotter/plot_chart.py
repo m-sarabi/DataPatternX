@@ -26,7 +26,7 @@ def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
                 y=[data_df.loc[data_df['date'] == date, 'high'].values[0] for date in pattern],
                 mode='markers',
                 marker=dict(color=colors[(i % len(colors))], size=10),
-                name=result.get('name')
+                name=result.get('name').replace('_', ' ').title()
             )
             data.append(marker_trace)
 
