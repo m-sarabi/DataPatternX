@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import plotly.offline as po
 
+colors = ['red', 'green', 'blue']
+
 
 def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
     data = []
@@ -16,15 +18,17 @@ def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
 
     # If patterns are provided, add markers
     if patterns is not None:
-        patterns = [date.strftime('%Y-%m-%d %H:%M:%S') for date in patterns['date'].tolist()]
-        marker_trace = go.Scatter(
-            x=[data_df.loc[data_df['date'] == date, 'date'].values[0] for date in patterns],
-            y=[data_df.loc[data_df['date'] == date, 'high'].values[0] for date in patterns],
-            mode='markers',
-            marker=dict(color='red', size=10),
-            name='Pattern Markers'
-        )
-        data.append(marker_trace)
+        for i, result in enumerate(patterns):
+            pattern = result.get('df')
+            pattern = [date.strftime('%Y-%m-%d %H:%M:%S') for date in pattern['date'].tolist()]
+            marker_trace = go.Scatter(
+                x=[data_df.loc[data_df['date'] == date, 'date'].values[0] for date in pattern],
+                y=[data_df.loc[data_df['date'] == date, 'high'].values[0] for date in pattern],
+                mode='markers',
+                marker=dict(color=colors[(i % len(colors))], size=10),
+                name=result.get('name')
+            )
+            data.append(marker_trace)
 
     data.append(candle_trace)
     fig = go.Figure(data=data)
