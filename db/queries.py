@@ -1,26 +1,33 @@
 import pandas as pd
+from pattern_query.patterns import get_pattern
 
 
 class QueryExecutor:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
-    def execute_pattern_query(self, pattern, table, fetch_all):
-        query_file = pattern
-        if not query_file:
-            raise ValueError(f"Pattern '{pattern}' not found")
+    def execute_pattern_query(self, patterns, table, fetch_all):
+        # query_files = []
+        # if not query_file:
+        #     raise ValueError(f"Pattern '{pattern}' not found")
 
         conn = self.db_connection.get_connection()
+        results = []
         try:
-            with open(pattern, 'r') as file:
-                query = file.read().replace('{{TABLE_NAME}}', table)
-
             with conn.cursor() as cur:
-                cur.execute(query)
-                columns = [col[0] for col in cur.description]
-                result = cur.fetchall()
+                for pattern in patterns:
+                    query_file = get_pattern(pattern)
+                    with open(query_file, 'r') as file:
+                        query = file.read().replace('{{TABLE_NAME}}', table)
 
-                result_df = pd.DataFrame(result, columns=columns)
+                    cur.execute(query)
+                    columns = [col[0] for col in cur.description]
+                    result = cur.fetchall()
+
+                    result_df = pd.DataFrame(result, columns=columns)
+                    results.append({
+                        pattern: result_df
+                    })
 
                 if fetch_all:
                     cur.execute("SELECT date, open, high, low, close FROM ohlc_data")
@@ -33,6 +40,6 @@ class QueryExecutor:
             self.db_connection.put_connection(conn)
 
         if fetch_all:
-            return result_df, all_data_df
+            return results, all_data_df
         else:
-            return result_df
+            return results
