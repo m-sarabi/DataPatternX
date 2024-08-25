@@ -21,7 +21,6 @@ SELECT
     high,
     low,
     close,
-    avg_size
 FROM
     ranked_data
 WHERE

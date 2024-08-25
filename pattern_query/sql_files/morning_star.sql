@@ -18,8 +18,7 @@ SELECT
     open,
     high,
     low,
-    close,
-    avg_size
+    close
 FROM
     ranked_data
 WHERE
