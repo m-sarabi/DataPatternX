@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 import plotly.offline as po
 
-colors = ['red', 'green', 'blue']
+colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
 
 
 def get_fig(data_df, patterns=None, candle_opacity=1, title=''):
